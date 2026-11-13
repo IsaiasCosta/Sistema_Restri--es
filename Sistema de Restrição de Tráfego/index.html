@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sistema de Restrição de Tráfego - BHTRANS / SUMOB</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+
+</head>
+
+<body>
+
+    <div id="app-container">
+        <button id="mobile-toggle"><i class="fa-solid fa-bars"></i> Menu</button>
+
+        <!-- Sidebar / Panel -->
+        <div id="sidebar">
+            <div class="sidebar-header">
+                <i class="fa-solid fa-truck-ramp-box"></i>
+                <div>
+                    <h1>Restrições Tráfego BH</h1>
+                    <p>Portarias BHTRANS / SUMOB</p>
+                </div>
+            </div>
+
+            <!-- Quick Location Selector & Simulator -->
+            <div class="section-card">
+                <div class="section-title"><i class="fa-solid fa-location-dot"></i> Consulta Rápida de Local</div>
+
+                <div class="form-group">
+                    <label for="location-select"><i class="fa-solid fa-map-pin"></i> Selecione a Via / Área:</label>
+                    <select id="location-select" class="form-control">
+                        <option value="">-- Selecione para Navegar --</option>
+                        <optgroup label="Áreas Gerais">
+                            <option value="central_area">Área Central Completa (Hipercentro, Savassi, Lourdes, etc)
+                            </option>
+                            <option value="toboga">Tobogã da Av. do Contorno (Proibido 24h)</option>
+                        </optgroup>
+                        <optgroup label="Avenidas do Hipercentro">
+                            <option value="hc_alfredo_balena">Av. Alfredo Balena</option>
+                            <option value="hc_alvares_cabral">Av. Álvares Cabral</option>
+                            <option value="hc_assis_chateaubriand">Av. Assis Chateaubriand</option>
+                            <option value="hc_augusto_de_lima">Av. Augusto de Lima</option>
+                            <option value="hc_barbacena">Av. Barbacena</option>
+                            <option value="hc_bernardo_monteiro">Av. Bernardo Monteiro</option>
+                            <option value="hc_bias_fortes">Av. Bias Fortes</option>
+                            <option value="hc_brasil">Av. Brasil</option>
+                            <option value="hc_carandai">Av. Carandaí</option>
+                            <option value="hc_francisco_sales">Av. Francisco Sales</option>
+                            <option value="hc_getulio_vargas">Av. Getúlio Vargas</option>
+                            <option value="hc_joao_pinheiro">Av. João Pinheiro</option>
+                            <option value="hc_olegario_maciel">Av. Olegário Maciel</option>
+                            <option value="hc_oiapoque">Av. Oiapoque</option>
+                            <option value="hc_parana">Av. Paraná</option>
+                            <option value="hc_santos_dumont">Av. Santos Dumont (Hipercentro)</option>
+                        </optgroup>
+                        <optgroup label="Ruas do Hipercentro">
+                            <option value="hc_alagoas">Rua Alagoas</option>
+                            <option value="hc_alvares_maciel">Rua Álvares Maciel</option>
+                            <option value="hc_alvarenga_peixoto">Rua Alvarenga Peixoto</option>
+                            <option value="hc_antonio_albuquerque">Rua Antônio de Albuquerque</option>
+                            <option value="hc_aquiles_lobo">Rua Aquiles Lobo</option>
+                            <option value="hc_araguari">Rua Araguari</option>
+                            <option value="hc_bernardo_guimaraes">Rua Bernardo Guimarães</option>
+                            <option value="hc_ceara">Rua Ceará</option>
+                            <option value="hc_caetes">Rua dos Caetés (Hipercentro)</option>
+                            <option value="hc_claudio_manoel">Rua Cláudio Manoel</option>
+                            <option value="hc_carijos">Rua dos Carijós (Hipercentro)</option>
+                            <option value="hc_curitiba">Rua Curitiba (Hipercentro)</option>
+                            <option value="hc_bahia">Rua da Bahia</option>
+                            <option value="hc_dias_adorno">Rua Dias Adorno</option>
+                            <option value="hc_domingos_vieira">Rua Domingos Vieira</option>
+                            <option value="hc_aimores">Rua dos Aimorés</option>
+                            <option value="hc_guaranis">Rua dos Guaranis</option>
+                            <option value="hc_goitacazes">Rua dos Goitacazes (Hipercentro)</option>
+                            <option value="hc_guajajaras">Rua dos Guajajaras (Hipercentro)</option>
+                            <option value="hc_guaicurus">Rua dos Guaicurus</option>
+                            <option value="hc_inconfidentes">Rua dos Inconfidentes</option>
+                            <option value="hc_otoni">Rua dos Otoni</option>
+                            <option value="hc_tamoios">Rua dos Tamoios (Hipercentro)</option>
+                            <option value="hc_timbiras">Rua dos Timbiras (Hipercentro)</option>
+                            <option value="hc_tupinambas">Rua dos Tupinambás (Hipercentro)</option>
+                            <option value="hc_tupis">Rua dos Tupis (Hipercentro)</option>
+                            <option value="hc_esp_santo">Rua Espírito Santo (Hipercentro)</option>
+                            <option value="hc_felipe_santos">Rua Felipe dos Santos</option>
+                            <option value="hc_fernandes_tourinho">Rua Fernandes Tourinho</option>
+                            <option value="hc_goncalves_dias">Rua Gonçalves Dias</option>
+                            <option value="hc_grao_para">Rua Grão Pará</option>
+                            <option value="hc_juiz_de_fora">Rua Juiz de Fora</option>
+                            <option value="hc_levindo_lopes">Rua Levindo Lopes</option>
+                            <option value="hc_manaus">Rua Manaus</option>
+                            <option value="hc_maranhao">Rua Maranhão</option>
+                            <option value="hc_martim_carvalho">Rua Martim de Carvalho</option>
+                            <option value="hc_matias_cardoso">Rua Matias Cardoso</option>
+                            <option value="hc_mato_grosso">Rua Mato Grosso</option>
+                            <option value="hc_ouro_preto">Rua Ouro Preto</option>
+                            <option value="hc_padre_belchior">Rua Padre Belchior</option>
+                            <option value="hc_padre_marinho">Rua Padre Marinho</option>
+                            <option value="hc_padre_rolim">Rua Padre Rolim</option>
+                            <option value="hc_paraiba">Rua Paraíba</option>
+                            <option value="hc_paracatu">Rua Paracatu</option>
+                            <option value="hc_pernambuco">Rua Pernambuco</option>
+                            <option value="hc_piaui">Rua Piauí</option>
+                            <option value="hc_prof_antonio_aleixo">Rua Professor Antônio Aleixo</option>
+                            <option value="hc_prof_morais">Rua Professor Morais</option>
+                            <option value="hc_rio_de_janeiro">Rua Rio de Janeiro (Hipercentro)</option>
+                            <option value="hc_rio_grande_norte">Rua Rio Grande do Norte</option>
+                            <option value="hc_rio_grande_sul">Rua Rio Grande do Sul</option>
+                            <option value="hc_romano_stochiero">Rua Romano Stochiero</option>
+                            <option value="hc_rodrigues_caldas">Rua Rodrigues Caldas</option>
+                            <option value="hc_santa_rita_durao">Rua Santa Rita Durão</option>
+                            <option value="hc_sao_paulo">Rua São Paulo (Hipercentro)</option>
+                            <option value="hc_santa_catarina">Rua Santa Catarina (Hipercentro)</option>
+                            <option value="hc_sergipe">Rua Sergipe</option>
+                            <option value="hc_tomas_gonzaga">Rua Tomás Gonzaga</option>
+                            <option value="hc_tome_souza">Rua Tomé de Souza</option>
+                            <option value="hc_uberaba">Rua Uberaba</option>
+                            <option value="hc_ulhoa_cintra">Rua Ulhoa Cintra</option>
+                        </optgroup>
+                        <optgroup label="Praças do Hipercentro">
+                            <option value="hc_praca_assembleia">Praça da Assembleia</option>
+                            <option value="hc_praca_estacao">Praça da Estação</option>
+                            <option value="hc_praca_liberdade">Praça da Liberdade</option>
+                            <option value="hc_praca_floriano_peixoto">Praça Floriano Peixoto</option>
+                            <option value="hc_praca_raul_soares">Praça Raul Soares</option>
+                            <option value="hc_praca_sete">Praça Sete de Setembro</option>
+                        </optgroup>
+                        <optgroup label="Alamedas do Hipercentro">
+                            <option value="hc_alvaro_celso">Alameda Álvaro Celso</option>
+                            <option value="hc_ezequiel_dias">Alameda Ezequiel Dias</option>
+                        </optgroup>
+                        <optgroup label="Corredores de Tráfego">
+                            <option value="hc_contorno">Av. do Contorno — escolha o trecho específico abaixo</option>
+                            <option value="afonso_pena">Av. Afonso Pena — Av. do Contorno até Av. Bandeirantes</option>
+                            <option value="prudente_morais">Av. Prudente de Morais</option>
+                            <option value="raja_gabaglia">Av. Raja Gabaglia — Av. do Contorno até Av. Barão Homem de Melo</option>
+                            <option value="amazonas">Av. Amazonas — Av. do Contorno até Av. Silva Lobo</option>
+                            <option value="tereza_cristina">Av. Tereza Cristina — Av. do Contorno até Av. Silva Lobo</option>
+                            <option value="elevado_castelo_branco">Elevado Castelo Branco</option>
+                            <option value="dom_pedro_ii">Av. Dom Pedro II — Av. N. Sra. de Fátima até Av. Presidente Carlos Luz</option>
+                            <option value="antonio_carlos">Av. Presidente Antônio Carlos — Av. N. Sra. de Fátima até Av. Bernardo Vasconcelos</option>
+                            <option value="tuneis_lagoinha">Túneis da Lagoinha — Pres. Tancredo Neves e Pref. Souza Lima</option>
+                            <option value="cristiano_machado">Av. Cristiano Machado — Túneis da Lagoinha até Av. Silviano Brandão</option>
+                            <option value="andradas">Av. dos Andradas — Av. do Contorno até Av. Silviano Brandão</option>
+                            <option value="itajuba">Rua Itajubá — Av. do Contorno até Rua Pouso Alegre</option>
+                            <option value="pouso_alegre">Rua Pouso Alegre — Av. Flávio dos Santos até Rua Jacuí</option>
+                            <option value="jacui">Rua Jacuí — Rua Pouso Alegre até Av. Cristiano Machado</option>
+                            <option value="contorno_ceara_amazonas">Av. do Contorno — Rua Ceará até Av. Amazonas</option>
+                            <option value="contorno_amazonas_andaluzita">Av. do Contorno — Av. Amazonas até Rua Andaluzita</option>
+                            <option value="contorno_inconfidentes_ceara">Av. do Contorno — Rua dos Inconfidentes até Rua Ceará</option>
+                            <option value="contorno_andaluzita_afonso_pena">Av. do Contorno — Rua Andaluzita até Av. Afonso Pena</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+                <div id="location-alert"></div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-title"><i class="fa-solid fa-sliders"></i> Simulação de Circulação</div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-truck"></i> Tipo de Veículo:</label>
+                    <select id="vehicle-type" class="form-control">
+                        <option value="heavy">Carga > 5,5t ou Comprimento > 6,50m</option>
+                        <option value="trailer">Cavalo Mecânico / Carreta</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-calendar-day"></i> Dia da Semana:</label>
+                    <select id="day-select" class="form-control">
+                        <option value="weekday">2ª a 6ª feira (Dia Útil)</option>
+                        <option value="saturday">Sábado</option>
+                        <option value="sunday">Domingo / Feriado</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-clock"></i> Horário de Consulta:</label>
+                    <input type="time" id="time-select" class="form-control" value="08:00">
+                </div>
+
+                <button id="btn-now" class="form-control"
+                    style="background:#e2e8f0; border:none; cursor:pointer; font-weight:600; margin-bottom:10px; padding:10px;">
+                    <i class="fa-solid fa-stopwatch"></i> Data/Hora Atual
+                </button>
+
+                <div id="status-card" class="status-restricted">
+                    <div id="status-title" style="font-size: 1rem;">PROIBIDO</div>
+                    <div id="status-desc" style="font-size: 0.72rem; font-weight: normal; margin-top: 4px;">Na Área
+                        Central e Corredores no horário selecionado.</div>
+                </div>
+            </div>
+
+            <!-- Official Rules Summary Table -->
+            <div class="section-card">
+                <div class="section-title"><i class="fa-solid fa-table-list"></i> Regra Oficial (PDF)</div>
+                <table class="rules-table">
+                    <thead>
+                        <tr>
+                            <th>Área</th>
+                            <th>2ª a 6ª</th>
+                            <th>Sáb</th>
+                            <th>Dom</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="4" style="background:#f8fafc; font-weight:bold; text-align:left;">Veículos >
+                                5,5t ou > 6,50m</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left;">Central</td>
+                            <td>7h-20h</td>
+                            <td>7h-15h</td>
+                            <td>Livre</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left;">Corredores</td>
+                            <td>7h-9h / 17h-20h</td>
+                            <td>7h-9h</td>
+                            <td>Livre</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left;">Tobogã</td>
+                            <td>Proibido 24h</td>
+                            <td>Proibido 24h</td>
+                            <td>Proibido 24h</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" style="background:#f8fafc; font-weight:bold; text-align:left;">Carretas /
+                                Cavalos Mecânicos</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left;">Central</td>
+                            <td>Proibido 24h</td>
+                            <td>Proibido 24h</td>
+                            <td>Proibido 24h</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left;">Corredores</td>
+                            <td>7h-9h / 17h-20h</td>
+                            <td>7h-9h</td>
+                            <td>Livre</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Interactive Map -->
+        <div id="map"></div>
+    </div>
+
+    <!-- Leaflet JS -->
+     <script src="script.js" defer></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+   
+</body>
+
+</html>
